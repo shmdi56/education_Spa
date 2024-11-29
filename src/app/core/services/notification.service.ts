@@ -5,8 +5,8 @@ import {ToastrService} from "ngx-toastr";
   providedIn: 'root'
 })
 export class NotificationService {
-  private toaster = inject(ToastrService)
-  constructor() { }
+
+  constructor(private toaster: ToastrService) { }
 
   showSuccess(message: string, title: string, position = 'toast-top-right') {
     this.toaster.success(message, title, {

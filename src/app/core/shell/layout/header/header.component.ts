@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MatBadge} from "@angular/material/badge";
 import {MatButton} from "@angular/material/button";
+import {AuthService} from "../../../services/general-services/auth.service";
 
 @Component({
   selector: 'app-header',
@@ -12,5 +13,8 @@ import {MatButton} from "@angular/material/button";
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-
+private authService = inject(AuthService);
+  logout() {
+    this.authService.logout();
+  }
 }

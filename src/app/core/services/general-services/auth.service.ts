@@ -7,6 +7,7 @@ import {ITokenModel, UserForLogin} from "../../models/user.model";
 import {ModulesEnum} from "../../enums/enums";
 import {RoutePermissions} from "../../authentication/permissions";
 import {PermissionPacker} from "../../authentication/permission-packer";
+import {NotificationService} from "../notification.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,27 +17,27 @@ export class AuthService {
   private authenticated = signal(false);
   private loading = signal(false);
   private authControllerUrl = environment.BASE_URL + '/Auth';
-  // private notification = inject(NotificationService);
 
-  constructor( private httpClient: HttpClient,
-  private router :Router) {
+  constructor(private httpClient: HttpClient,
+              private router: Router,
+              public notification: NotificationService) {
     this.loading.set(false);
   }
 
 
   login(loginInfo: UserForLogin) {
     this.loading.set(true);
-    return this.httpClient.post<ITokenModel>(this.authControllerUrl + '/login', loginInfo).subscribe(res => {
-      this.authenticate(res);
-      // this.notification.showSuccess('خوش آمدید', 'کاربر گرامی: ' + this.getCurrentUserNameFamily(), 'toast-bottom-left');
-    }, (error) => {
-      if (error.status === 404) {
-        // this.notification.showError('نام کاربری معتبر نمی باشد', 'خطا در ورود');
-      } else {
-        // this.notification.showError('رمز ورود نا معتبر است', 'خطا در ورود');
-      }
-      this.authenticationError();
-      this.loading.set(false);
+    return this.httpClient.post<ITokenModel>(this.authControllerUrl + '/login', loginInfo).subscribe({
+      next: (res) => {
+        this.authenticate(res);
+        this.notification.showSuccess('خوش آمدید', 'ورود موفق')
+        this.loading.set(false);
+      },
+      error: err => {
+        console.log(err);
+        this.loading.set(false);
+      },
+      complete: () => console.log("completed")
     });
   }
 
@@ -45,7 +46,6 @@ export class AuthService {
     const userForLogout = new UserForLogin();
     userForLogout.userName = userName;
     localStorage.removeItem('token');
-    localStorage.removeItem('menuMustSmall');
     this.authenticated.set(false);
     this.httpClient.post<ITokenModel>(environment.BASE_URL + '/Auth/logout', userForLogout).subscribe(() => {
       console.log('logout');
@@ -67,10 +67,10 @@ export class AuthService {
   }
 
   public getToken(): string | null {
-    return null;
+    return localStorage.getItem('token');
   }
 
-  public userPermissions(): RoutePermissions[]{
+  public userPermissions(): RoutePermissions[] {
     if (!this.isAuthenticated) {
       return [];
     }
@@ -115,11 +115,13 @@ export class AuthService {
     const decodedToken = this.jwtHelper.decodeToken(token);
     return decodedToken.unique_name;
   }
+
   getCurrentUserPositionId() {
     const token = this.getToken() ?? '';
     const decodedToken = this.jwtHelper.decodeToken(token);
     return +decodedToken.PositionId;
   }
+
   getCurrentUserPositionTitle() {
     const token = this.getToken() ?? '';
     const decodedToken = this.jwtHelper.decodeToken(token);
