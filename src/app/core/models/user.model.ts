@@ -10,32 +10,32 @@ export interface IUser {
 
 export class User implements IUser {
   id?: number;
-  userName: string;
-  password: string;
-  personnelCode: string;
-  firstName: string;
-  lastName: string;
-  roleName: string;
-  phoneNumber: string;
-  mobileNumber: string;
-  mainModule: ModulesEnum;
-  photoUrl: string;
+  userName: string = '';
+  password: string = '';
+  personnelCode: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  roleName: string = '';
+  phoneNumber: string = '';
+  mobileNumber: string = '';
+  mainModule: ModulesEnum = ModulesEnum.ADMIN;
+  photoUrl: string = '';
 
 }
 
 export class UserWithPositions implements IUser {
   id?: number;
-  userName: string;
-  password: string;
-  personnelCode: string;
-  firstName: string;
-  lastName: string;
-  roleName: string;
-  phoneNumber: string;
-  mobileNumber: string;
-  mainModule: ModulesEnum;
-  photoUrl: string;
-  userPositions: UserPositionForSave[];
+  userName: string = '';
+  password: string = '';
+  personnelCode: string = '';
+  firstName: string = '';
+  lastName: string = '';
+  roleName: string = '';
+  phoneNumber: string = '';
+  mobileNumber: string = '';
+  mainModule: ModulesEnum = ModulesEnum.ADMIN;
+  photoUrl: string = '';
+  userPositions: UserPositionForSave[] = [];
 
 }
 
@@ -48,8 +48,8 @@ export class UserForSave implements IUser {
   firstName: string;
   lastName: string;
   mobileNumber: string;
-  mainModule: ModulesEnum | null;
-  userRoles: UserRoleForSave[];
+  mainModule: ModulesEnum  = ModulesEnum.ADMIN;
+  userRoles: UserRoleForSave[] = [];
   constructor(id: number = 0,
               userName: string = '',
               password: string = '',
@@ -82,9 +82,9 @@ export class UserForList implements IUser {
   mainModule: ModulesEnum;
   positionId: number;
   positionTitle: string;
-  progress: number;
-  roles: RoleForList[];
-  userRoles: UserRoleForList[];
+  progress: number = 0;
+  roles: RoleForList[] = [];
+  userRoles: UserRoleForList[] = [];
   constructor(id: number = 0,
               userName: string = '',
               personnelCode: string = '',
@@ -120,7 +120,7 @@ export class UserStashed {
   constructor(id: number = 0,
               userName: string = '',
               name: string = '',
-              mainModule: ModulesEnum = null,
+              mainModule: ModulesEnum = ModulesEnum.ADMIN,
               role: string = '',
               positionId: number = 0,
               photoUrl: string = '',
@@ -137,8 +137,8 @@ export class UserStashed {
 }
 
 export class UserForLogin {
-  userName: string;
-  password: string;
+  userName: string = '';
+  password: string = '';
 }
 
 export class UserForChangePassword {
@@ -157,7 +157,7 @@ export class UserPositionForSave {
   toDate: Date;
   positionId: number;
   userId: number;
-  constructor(fromDate: Date = null, toDate: Date = null, positionId: number = 0, userId: number = 0, ) {
+  constructor(fromDate: Date = new Date(), toDate: Date = new Date(), positionId: number = 0, userId: number = 0, ) {
     this.fromDate = fromDate;
     this.toDate = toDate;
     this.positionId = positionId;
@@ -170,13 +170,13 @@ export interface ITokenModel {
 }
 export class UserRoleForSave {
   userId?: number;
-  roleId: number;
+  roleId: number = 0;
 }
 
 export class UserRoleForList {
-  userId: number;
-  roleId: number;
-  roleTitle: string;
+  userId: number = 0;
+  roleId: number = 0;
+  roleTitle: string = '';
 }
 
 

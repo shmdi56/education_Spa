@@ -1,9 +1,7 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {Injectable, signal} from '@angular/core';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {Router} from "@angular/router";
-import {Subscription} from "rxjs";
 import {HttpClient} from "@angular/common/http";
-import {NotificationService} from "../notification.service";
 import {environment} from "../../../../environments/environment";
 import {ITokenModel, UserForLogin} from "../../models/user.model";
 import {ModulesEnum} from "../../enums/enums";
@@ -17,12 +15,11 @@ export class AuthService {
   jwtHelper = new JwtHelperService();
   private authenticated = signal(false);
   private loading = signal(false);
-  expirationDate: Date = new Date('March 10, 2027 20:58:00')
   private authControllerUrl = environment.BASE_URL + '/Auth';
-  private notification = inject(NotificationService);
-  private httpClient = inject(HttpClient);
-  private router = inject(Router)
-  constructor() {
+  // private notification = inject(NotificationService);
+
+  constructor( private httpClient: HttpClient,
+  private router :Router) {
     this.loading.set(false);
   }
 
@@ -31,12 +28,12 @@ export class AuthService {
     this.loading.set(true);
     return this.httpClient.post<ITokenModel>(this.authControllerUrl + '/login', loginInfo).subscribe(res => {
       this.authenticate(res);
-      this.notification.showSuccess('خوش آمدید', 'کاربر گرامی: ' + this.getCurrentUserNameFamily(), 'toast-bottom-left');
+      // this.notification.showSuccess('خوش آمدید', 'کاربر گرامی: ' + this.getCurrentUserNameFamily(), 'toast-bottom-left');
     }, (error) => {
       if (error.status === 404) {
-        this.notification.showError('نام کاربری معتبر نمی باشد', 'خطا در ورود');
+        // this.notification.showError('نام کاربری معتبر نمی باشد', 'خطا در ورود');
       } else {
-        this.notification.showError('رمز ورود نا معتبر است', 'خطا در ورود');
+        // this.notification.showError('رمز ورود نا معتبر است', 'خطا در ورود');
       }
       this.authenticationError();
       this.loading.set(false);
@@ -70,7 +67,7 @@ export class AuthService {
   }
 
   public getToken(): string | null {
-    return localStorage.getItem('token');
+    return null;
   }
 
   public userPermissions(): RoutePermissions[]{

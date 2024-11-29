@@ -1,1 +1,105 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+
+
+// =============  theme  =========================
+html {
+  color-scheme: light dark;
+  @include mat.theme((
+    color: (
+      primary: mat.$violet-palette,
+      tertiary: mat.$orange-palette,
+      theme-type: light,
+    ),
+    typography: (
+      plain-family: font-family-vazir,
+      brand-family: Open Sans,
+      bold-weight: 900,
+      medium-weight: 500,
+      regular-weight: 300,
+    ),
+    density: 0
+  ));
+}
+
+//==============    font family definition  ==============================
+.font-family-vazir {
+  font-family: "Vazir-FD", sans-serif !important;
+}
+
+.font-family-vazir-bold {
+  font-family: "Vazir-Bold-FD", sans-serif !important;
+}
+
+.font-family-vazir-light {
+  font-family: "Vazir-Ligh-FD", sans-serif !important;
+}
+
+.font-family-vazir-thin {
+  font-family: "Vazir-Thin-FD", sans-serif !important;
+}
+
+@font-face {
+  font-family: 'Vazir-FD';
+  src: url("./assets/fonts/Vazir-FD.woff2") format('woff2'), url("./assets/fonts/Vazir-FD.woff") format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Vazir-Bold-FD';
+  src: url("./assets/fonts/Vazir-Bold-FD.woff2") format('woff2'), url("./assets/fonts/Vazir-Bold-FD.woff") format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+}
+
+
+@font-face {
+  font-family: 'Vazir-Ligh-FD';
+  src: url("./assets/fonts/Vazir-Light-FD.woff2") format('woff2'), url("./assets/fonts/Vazir-Light-FD.woff") format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Vazir-Thin-FD';
+  src: url("./assets/fonts/Vazir-Thin-FD.woff2") format('woff2'), url("./assets/fonts/Vazir-Thin-FD.woff") format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: auto;
+}
+
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url("https://fonts.gstatic.com/s/materialicons/v142/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2") format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons', serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+
+// ================  tailwind configuration  ===========================
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Vazir-FD, "Helvetica Neue", sans-serif; }
