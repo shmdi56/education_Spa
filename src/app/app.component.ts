@@ -1,10 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {
-  MatButton, MatFabButton
-} from "@angular/material/button";
-import {MatBadge} from "@angular/material/badge";
-import {MatIcon} from "@angular/material/icon";
 import {HeaderComponent} from "./core/shell/layout/header/header.component";
 import {RouterOutlet} from "@angular/router";
 import {FooterComponent} from "./core/shell/layout/footer/footer.component";
