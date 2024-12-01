@@ -95,6 +95,10 @@ html {
   -webkit-font-smoothing: antialiased;
 }
 
+// ================  toast customized setting  =========================
+.toast-container {
+  direction: rtl;
+}
 
 // ================  tailwind configuration  ===========================
 @tailwind base;

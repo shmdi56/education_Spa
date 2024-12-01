@@ -5,6 +5,7 @@ import {AuthService} from "../../services/general-services/auth.service";
 import {NgIf} from "@angular/common";
 import {MatPrefix} from "@angular/material/form-field";
 import {MatTooltip} from "@angular/material/tooltip";
+import {MatProgressBar} from "@angular/material/progress-bar";
 
 @Component({
   selector: 'app-login',
@@ -13,13 +14,15 @@ import {MatTooltip} from "@angular/material/tooltip";
     NgIf,
     MatPrefix,
     MatTooltip,
+    MatProgressBar,
   ],
   templateUrl: './login.component.html',
+  standalone: true,
   styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
   model: UserForLogin = { userName: '', password: '' };
-  private authService = inject(AuthService)
+  public authService = inject(AuthService)
   showPass = false;
   userName = '';
   passWord = '';

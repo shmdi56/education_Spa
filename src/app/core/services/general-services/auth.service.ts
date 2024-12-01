@@ -1,7 +1,7 @@
-import {Injectable, signal} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {JwtHelperService} from "@auth0/angular-jwt";
 import {Router} from "@angular/router";
-import {HttpClient} from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../environments/environment";
 import {ITokenModel, UserForLogin} from "../../models/user.model";
 import {ModulesEnum} from "../../enums/enums";
@@ -13,29 +13,39 @@ import {NotificationService} from "../notification.service";
   providedIn: 'root'
 })
 export class AuthService {
+  private notification  = inject(NotificationService);
+  private httpClient = inject(HttpClient);
+  public authenticated = signal(false);
+  public authLoading = signal(false);
+  private router = inject(Router);
   jwtHelper = new JwtHelperService();
-  private authenticated = signal(false);
-  private loading = signal(false);
   private authControllerUrl = environment.BASE_URL + '/Auth';
 
-  constructor(private httpClient: HttpClient,
-              private router: Router,
-              public notification: NotificationService) {
-    this.loading.set(false);
+  constructor() {
+    this.authLoading.set(false);
   }
 
 
   login(loginInfo: UserForLogin) {
-    this.loading.set(true);
+    this.authLoading.set(true);
     return this.httpClient.post<ITokenModel>(this.authControllerUrl + '/login', loginInfo).subscribe({
-      next: (res) => {
-        this.authenticate(res);
-        this.notification.showSuccess('خوش آمدید', 'ورود موفق')
-        this.loading.set(false);
+      next: (token) => {
+        this.authenticate(token);
+        const familyName = this.getCurrentUserNameFamily();
+        this.notification.showSuccess(familyName + '! خوش آمدید', 'ورود موفق')
+        this.authLoading.set(false);
       },
-      error: err => {
+      error: (err: HttpErrorResponse) => {
         console.log(err);
-        this.loading.set(false);
+        switch (err.status) {
+          case 401:
+            this.notification.showError('نام کاربری و یا رمز عبور اشتباه است. لطفا مجددا تلاش کنید', 'کاربر نامعتبر'); break;
+          case 0:
+            this.notification.showError('ارتباط شبکه شما قطع می باشد', 'مشکل شبکه', 3000); break;
+          default:
+            this.notification.showError('خطای ناشناخته ای رخ داده است', 'کد حطا ' + err.statusText, 3000)
+        }
+        this.authLoading.set(false);
       },
       complete: () => console.log("completed")
     });
@@ -52,12 +62,6 @@ export class AuthService {
     });
     location.reload();
   }
-
-  // In case of incorrect login details.
-  public authenticationError() {
-    this.authenticated.set(false);
-  }
-
 
   public hasPermission(permission: RoutePermissions): boolean {
     if (permission === undefined) {
@@ -84,15 +88,13 @@ export class AuthService {
   // This method submits authentication.
   public authenticate(result: ITokenModel) {
     localStorage.setItem('token', result.token);
+    const decodedToken = this.jwtHelper.decodeToken(result.token);
     if (+this.getCurrentUserMainModule() === ModulesEnum.ADMIN) {
-      const decodedToken = this.jwtHelper.decodeToken(result.token);
       localStorage.setItem('currentUserId', decodedToken.nameid);
       this.authenticated.set(true);
       this.router.navigate(['/administration']).then(() => {
-        this.loading.set(false);
+        this.authLoading.set(false);
       });
-
-    } else if (+this.getCurrentUserMainModule() === ModulesEnum.MINING) {
 
     } else if (+this.getCurrentUserMainModule() === ModulesEnum.MANAGEMENT) {
 
